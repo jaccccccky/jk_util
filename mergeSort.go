@@ -3,13 +3,13 @@ package jk_util
 var isAsc = true
 
 /*Sort 采用归并排序,在原数组上进行排序，true为升序，false为降序*/
-func Sort(arr *[]int, isAsc_ bool) int {
+func Sort(arr []int, isAsc_ bool) int {
 	isAsc = isAsc_
-	l := len(*arr)
+	l := len(arr)
 	var temp = make([]int, l)
-	return sortGroup(arr, &temp, 0, l-1)
+	return sortGroup(arr, temp, 0, l-1)
 }
-func sortGroup(arr, temp *[]int, left, right int) int {
+func sortGroup(arr, temp []int, left, right int) int {
 	if left < right {
 		mid := (left + right) / 2
 		a := sortGroup(arr, temp, left, mid)
@@ -21,74 +21,72 @@ func sortGroup(arr, temp *[]int, left, right int) int {
 		return 0
 	}
 }
-func merge(arr, temp *[]int, left, mid, right int) (cnt int) {
+func merge(arr, temp []int, left, mid, right int) (cnt int) {
 	i := left
 	j := mid + 1
 	t := 0
-	if (isAsc && (*arr)[mid] <= (*arr)[j]) || (!isAsc && (*arr)[mid] >= (*arr)[j]) {
+	if (isAsc && arr[mid] <= arr[j]) || (!isAsc && arr[mid] >= arr[j]) {
 		return
 	}
 	for ; i <= mid && j <= right; t++ {
-		if (isAsc && (*arr)[i] <= (*arr)[j]) || (!isAsc && (*arr)[i] >= (*arr)[j]) {
-			(*temp)[t] = (*arr)[i]
+		if (isAsc && arr[i] <= arr[j]) || (!isAsc && arr[i] >= arr[j]) {
+			temp[t] = arr[i]
 			i++
 		} else {
-			(*temp)[t] = (*arr)[j]
+			temp[t] = arr[j]
 			j++
 			cnt += mid + 1 - i
 		}
 	}
 	for ; i <= mid; i++ {
-		(*temp)[t] = (*arr)[i]
+		temp[t] = arr[i]
 		t++
 	}
 	for ; j <= right; j++ {
-		(*temp)[t] = (*arr)[j]
+		temp[t] = arr[j]
 		t++
 	}
 	for t = 0; t+left <= right; t++ {
-		(*arr)[t+left] = (*temp)[t]
+		arr[t+left] = temp[t]
 	}
 	return
 }
 
 /*Sort 采用归并排序,返回排序后的数组，原数组不变，true为升序，false为降序*/
-func Sort2(arr *[]int, isAsc_ bool) ([]int, int) {
+func Sort2(arr []int, isAsc_ bool) ([]int, int) {
 	isAsc = isAsc_
 	return sortGroup2(arr)
 }
-func sortGroup2(arr *[]int) ([]int, int) {
-	length := len(*arr)
+func sortGroup2(arr []int) ([]int, int) {
+	length := len(arr)
 	if length <= 1 {
-		return *arr, 0
+		return arr, 0
 	}
 	num := length / 2
-	arrLeft := (*arr)[:num]
-	arrRight := (*arr)[num:]
-	left, a := sortGroup2(&arrLeft)
-	right, b := sortGroup2(&arrRight)
-	result, c := merge2(&left, &right)
+	left, a := sortGroup2(arr[:num])
+	right, b := sortGroup2(arr[num:])
+	result, c := merge2(left, right)
 	return result, a + b + c
 }
-func merge2(left, right *[]int) (result []int, cnt int) {
+func merge2(left, right []int) (result []int, cnt int) {
 	l, r := 0, 0
-	lenLeft, lenRight := len(*left), len(*right)
-	if (isAsc && (*left)[lenLeft-1] <= (*right)[r]) || (!isAsc && (*left)[lenLeft-1] >= (*right)[r]) {
-		result = append(result, (*left)[l:]...)
-		result = append(result, (*right)[r:]...)
+	lenLeft, lenRight := len(left), len(right)
+	if (isAsc && left[lenLeft-1] <= right[r]) || (!isAsc && left[lenLeft-1] >= right[r]) {
+		result = append(result, left[l:]...)
+		result = append(result, right[r:]...)
 		return
 	}
 	for l < lenLeft && r < lenRight {
-		if (isAsc && (*left)[l] <= (*right)[r]) || (!isAsc && (*left)[l] >= (*right)[r]) {
-			result = append(result, (*left)[l])
+		if (isAsc && left[l] <= right[r]) || (!isAsc && left[l] >= right[r]) {
+			result = append(result, left[l])
 			l++
 		} else {
-			result = append(result, (*right)[r])
+			result = append(result, right[r])
 			r++
 			cnt += lenLeft - l
 		}
 	}
-	result = append(result, (*left)[l:]...)
-	result = append(result, (*right)[r:]...)
+	result = append(result, left[l:]...)
+	result = append(result, right[r:]...)
 	return
 }

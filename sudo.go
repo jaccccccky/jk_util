@@ -6,14 +6,14 @@ import (
 )
 
 /*SudoCalculation 计算并填写矩阵*/
-func SudoCalculation(sd *[][]int) error {
+func SudoCalculation(sd [][]int) error {
 	var zeroList [][2]int = make([][2]int, 0)
-	for i := range *sd {
-		for j := range (*sd)[i] {
-			if (*sd)[i][j] == 0 {
+	for i := range sd {
+		for j := range sd[i] {
+			if sd[i][j] == 0 {
 				zeroList = append(zeroList, [2]int{i, j})
 			} else {
-				if !checkInit(sd, i, j, (*sd)[i][j]) {
+				if !checkInit(sd, i, j, sd[i][j]) {
 					return errors.New("数独题目不合法！")
 				}
 			}
@@ -27,7 +27,7 @@ func SudoCalculation(sd *[][]int) error {
 			iStr, jStr := strconv.Itoa(i), strconv.Itoa(j)
 			min := minMap[iStr+","+jStr]
 			if check(sd, i, j, x, min) {
-				(*sd)[i][j] = x
+				sd[i][j] = x
 				minMap[iStr+","+jStr] = x
 				break
 			}
@@ -35,7 +35,7 @@ func SudoCalculation(sd *[][]int) error {
 		if x == 10 {
 			for a_ := a; a_ < lens; a_++ {
 				i_, j_ := zeroList[a_][0], zeroList[a_][1]
-				(*sd)[i_][j_] = 0
+				sd[i_][j_] = 0
 				iStr, jStr := strconv.Itoa(i_), strconv.Itoa(j_)
 				minMap[iStr+","+jStr] = 0
 			}
@@ -46,20 +46,20 @@ func SudoCalculation(sd *[][]int) error {
 }
 
 /*check 检查单元格合法性*/
-func checkInit(sd *[][]int, i int, j int, x int) bool {
+func checkInit(sd [][]int, i int, j int, x int) bool {
 	if x == 0 {
 		return true
 	}
-	for j_ := range (*sd)[i] {
+	for j_ := range sd[i] {
 		if j_ != j {
-			if (*sd)[i][j_] == x {
+			if sd[i][j_] == x {
 				return false
 			}
 		}
 	}
-	for i_ := range *sd {
+	for i_ := range sd {
 		if i_ != i {
-			if (*sd)[i_][j] == x {
+			if sd[i_][j] == x {
 				return false
 			}
 		}
@@ -68,7 +68,7 @@ func checkInit(sd *[][]int, i int, j int, x int) bool {
 	for m := a * 3; m < 3+a*3; m++ {
 		for n := b * 3; n < 3+b*3; n++ {
 			if m != i || n != j {
-				if (*sd)[m][n] == x {
+				if sd[m][n] == x {
 					return false
 				}
 			}
@@ -78,11 +78,11 @@ func checkInit(sd *[][]int, i int, j int, x int) bool {
 }
 
 /*check 检查单元格填写的合法性*/
-func check(sd *[][]int, i int, j int, x int, min int) bool {
+func check(sd [][]int, i int, j int, x int, min int) bool {
 	if x < min {
 		return false
 	}
-	if (*sd)[i][j] == x {
+	if sd[i][j] == x {
 		return false
 	}
 	return checkInit(sd, i, j, x)
