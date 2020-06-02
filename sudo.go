@@ -33,12 +33,9 @@ func SudoCalculation(sd [][]int) error {
 			}
 		}
 		if x == 10 {
-			for a_ := a; a_ < lens; a_++ {
-				i_, j_ := zeroList[a_][0], zeroList[a_][1]
-				sd[i_][j_] = 0
-				iStr, jStr := strconv.Itoa(i_), strconv.Itoa(j_)
-				minMap[iStr+","+jStr] = 0
-			}
+			sd[i][j] = 0
+			iStr, jStr := strconv.Itoa(i), strconv.Itoa(j)
+			minMap[iStr+","+jStr] = 0
 			a = a - 2
 		}
 	}
